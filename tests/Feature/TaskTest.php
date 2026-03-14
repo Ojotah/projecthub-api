@@ -31,7 +31,7 @@ class TaskTest extends TestCase
         ]);
 
         $response
-            ->assertOk()
+            ->assertCreated()
             ->assertJsonPath('data.title', 'Implement authentication')
             ->assertJsonPath('data.created_by', $creator->id);
 

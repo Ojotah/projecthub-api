@@ -21,7 +21,7 @@ class ProjectTest extends TestCase
         ]);
 
         $response
-            ->assertOk()
+            ->assertCreated()
             ->assertJsonPath('data.name', 'Project Hub API')
             ->assertJsonPath('data.owner_id', $user->id);
 

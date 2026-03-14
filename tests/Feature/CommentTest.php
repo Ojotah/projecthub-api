@@ -33,7 +33,7 @@ class CommentTest extends TestCase
         ]);
 
         $response
-            ->assertOk()
+            ->assertCreated()
             ->assertJsonPath('data.task_id', $task->id)
             ->assertJsonPath('data.user_id', $user->id)
             ->assertJsonPath('data.content', 'I have added all setup steps.');
