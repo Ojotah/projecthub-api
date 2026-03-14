@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateProjectRequest extends FormRequest
+class StoreCommentRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,8 +14,8 @@ class UpdateProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|string|max:255',
-            'description' => 'nullable|string',
+            'task_id' => 'required|exists:tasks,id',
+            'content' => 'required|string',
         ];
     }
 }

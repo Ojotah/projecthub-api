@@ -3,47 +3,49 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\TaskService;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected TaskService $taskService;
+
+    public function __construct(TaskService $taskService)
     {
-        //
+        $this->taskService = $taskService;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function index(Request $request)
+    {
+        return $this->taskService->filter($request->all());
+    }
+
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        $data['created_by'] = auth()->id();
+
+        return $this->taskService->create($data);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        return $this->taskService->find($id, ['project', 'assignedUser', 'comments']);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        return $this->taskService->update($id, $request->all());
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        return $this->taskService->delete($id);
+    }
+
+    public function changeStatus(Request $request, $id)
+    {
+        return $this->taskService->changeStatus($id, $request->status);
     }
 }

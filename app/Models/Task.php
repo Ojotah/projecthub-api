@@ -13,14 +13,15 @@ class Task extends Model
         'project_id',
         'assigned_to',
         'created_by',
-        'due_date'
+        'due_date',
     ];
 
     protected $casts = [
         'due_date' => 'datetime',
         'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'updated_at' => 'datetime',
     ];
+
     public function project()
     {
         return $this->belongsTo(Project::class);

@@ -11,8 +11,9 @@ class ActivityLog extends Model
         'action',
         'subject_type',
         'subject_id',
-        'description'
+        'description',
     ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

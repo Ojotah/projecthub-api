@@ -15,7 +15,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
 
-            $table->primary(['user_id','project_id']);
+            $table->primary(['user_id', 'project_id']);
         });
     }
 

@@ -9,13 +9,14 @@ class Project extends Model
     protected $fillable = [
         'name',
         'description',
-        'owner_id'
+        'owner_id',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'updated_at' => 'datetime',
     ];
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');

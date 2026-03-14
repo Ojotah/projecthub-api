@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
-            $table->enum('status', ['todo','in_progress','done'])->default('todo');
+            $table->enum('status', ['todo', 'in_progress', 'done'])->default('todo');
 
             $table->foreignId('project_id')->constrained()->cascadeOnDelete();
             $table->foreignId('assigned_to')->nullable()->constrained('users');
@@ -24,7 +24,7 @@ return new class extends Migration
             $table->timestamp('due_date')->nullable();
 
             $table->timestamps();
-    });
+        });
     }
 
     /**

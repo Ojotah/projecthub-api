@@ -3,47 +3,36 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
+use App\Services\ProjectService;
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(protected ProjectService $projectService) {}
+
     public function index()
     {
-        //
+        return $this->projectService->all(['tasks']);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreProjectRequest $request)
     {
-        //
+        return $this->projectService->create($request->all());
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        return $this->projectService->find($id, ['tasks', 'members']);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(UpdateProjectRequest $request, $id)
     {
-        //
+        return $this->projectService->update($id, $request->all());
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        return $this->projectService->delete($id);
     }
 }
