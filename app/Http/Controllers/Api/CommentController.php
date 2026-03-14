@@ -3,24 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\UpdateCommentRequest;
 use App\Services\CommentService;
-use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    protected CommentService $commentService;
-
-    public function __construct(CommentService $commentService)
-    {
-        $this->commentService = $commentService;
-    }
+    public function __construct(protected CommentService $commentService) {}
 
     public function index()
     {
         return $this->commentService->all(['user', 'task']);
     }
 
-    public function store(Request $request)
+    public function store(StoreCommentRequest $request)
     {
         $data = $request->all();
 
@@ -34,7 +30,7 @@ class CommentController extends Controller
         return $this->commentService->find($id, ['user', 'task']);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateCommentRequest $request, $id)
     {
         return $this->commentService->update($id, $request->all());
     }

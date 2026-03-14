@@ -6,9 +6,11 @@ use App\Models\Task;
 
 class TaskService extends BaseService
 {
-    public function __construct(Task $task)
+    public function __construct(protected Task $task) {}
+
+    public function getModel(): Task
     {
-        $this->model = $task;
+        return $this->task;
     }
 
     public function changeStatus($taskId, $status)
