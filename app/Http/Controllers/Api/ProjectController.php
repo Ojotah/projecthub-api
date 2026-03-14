@@ -21,7 +21,11 @@ class ProjectController extends Controller
 
     public function store(StoreProjectRequest $request)
     {
-        $project = $this->projectService->create($request->validated());
+        $data = $request->validated();
+
+        $data['owner_id'] = auth()->id();
+
+        $project = $this->projectService->create($data);
 
         return new ProjectResource($project->loadMissing(['tasks', 'members']));
     }
