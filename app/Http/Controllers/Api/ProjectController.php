@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Resources\ProjectResource;
 use App\Services\ProjectService;
 
 class ProjectController extends Controller
@@ -13,26 +14,38 @@ class ProjectController extends Controller
 
     public function index()
     {
-        return $this->projectService->all(['tasks']);
+        $projects = $this->projectService->all(['tasks']);
+
+        return ProjectResource::collection($projects);
     }
 
     public function store(StoreProjectRequest $request)
     {
-        return $this->projectService->create($request->all());
+        $project = $this->projectService->create($request->validated());
+
+        return new ProjectResource($project->loadMissing(['tasks', 'members']));
     }
 
     public function show($id)
     {
-        return $this->projectService->find($id, ['tasks', 'members']);
+        $project = $this->projectService->find($id, ['tasks', 'members']);
+
+        return new ProjectResource($project);
     }
 
     public function update(UpdateProjectRequest $request, $id)
     {
-        return $this->projectService->update($id, $request->all());
+        $project = $this->projectService->update($id, $request->validated());
+
+        return new ProjectResource($project->loadMissing(['tasks', 'members']));
     }
 
     public function destroy($id)
     {
-        return $this->projectService->delete($id);
+        $this->projectService->delete($id);
+
+        return response()->json([
+            'message' => 'Project deleted successfully',
+        ]);
     }
 }

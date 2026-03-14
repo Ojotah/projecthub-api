@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Resources\TaskResource;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
 
@@ -14,35 +15,50 @@ class TaskController extends Controller
 
     public function index(Request $request)
     {
-        return $this->taskService->filter($request->all());
+        $perPage = (int) $request->integer('per_page', 15);
+        $tasks = $this->taskService->paginate($perPage, ['project', 'comments']);
+
+        return TaskResource::collection($tasks);
     }
 
     public function store(StoreTaskRequest $request)
     {
-        $data = $request->all();
+        $data = $request->validated();
 
         $data['created_by'] = auth()->id();
 
-        return $this->taskService->create($data);
+        $task = $this->taskService->create($data);
+
+        return new TaskResource($task->loadMissing(['project', 'comments']));
     }
 
     public function show($id)
     {
-        return $this->taskService->find($id, ['project', 'assignedUser', 'comments']);
+        $task = $this->taskService->find($id, ['project', 'comments']);
+
+        return new TaskResource($task);
     }
 
     public function update(UpdateTaskRequest $request, $id)
     {
-        return $this->taskService->update($id, $request->all());
+        $task = $this->taskService->update($id, $request->validated());
+
+        return new TaskResource($task->loadMissing(['project', 'comments']));
     }
 
     public function destroy($id)
     {
-        return $this->taskService->delete($id);
+        $this->taskService->delete($id);
+
+        return response()->json([
+            'message' => 'Task deleted successfully',
+        ]);
     }
 
     public function changeStatus(Request $request, $id)
     {
-        return $this->taskService->changeStatus($id, $request->status);
+        $task = $this->taskService->changeStatus($id, $request->status);
+
+        return new TaskResource($task->loadMissing(['project', 'comments']));
     }
 }
